@@ -1,0 +1,9 @@
+rootProject.name = 'SpringCloud'
+
+include 'api-gateway'
+include 'eureka-client1'
+include 'eureka-server'
+include 'spring-config-client'
+include 'spring-config-server'
+include 'eureka-client2'
+include 'eureka-client3'
