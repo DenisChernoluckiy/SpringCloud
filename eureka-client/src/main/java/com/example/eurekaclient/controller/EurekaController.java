@@ -1,5 +1,7 @@
 package com.example.eurekaclient.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -17,6 +19,35 @@ public class EurekaController {
     private EurekaClient2FeignClient feignClient;
 
     @Autowired
+    private CircuitBreakerFactory circuitBreakerFactory;
+
+    @GetMapping("/send")
+    public String sendOrder(@RequestParam String order,
+                            @RequestParam String customer) {
+
+        String response = circuitBreakerFactory.create("feignClient").run(() -> feignClient.doOrder(order, customer),
+                r -> "Oops... something went wrong during registration your order");
+
+        return response;
+    }
+
+    @GetMapping("/2send")
+    public String secondSendOrder(@RequestParam String order,
+                            @RequestParam  String customer) {
+        return circuitBreakerFactory.create("feignClient")
+                .run(() -> feignClient.doOrder(order, customer),
+                        throwable -> fallbackOrder(order, customer));
+    }
+
+    public String fallbackOrder(@RequestParam String order,
+                                @RequestParam  String customer) {
+        return "Fallback Order: " + order + " for customer: " + customer + " is denied";
+    }
+
+  /*  @Autowired
+    private EurekaClient2FeignClient feignClient;
+
+    @Autowired
     private CircuitBreakerFactory cbFactory;
 
     @GetMapping("/send")
@@ -30,7 +61,7 @@ public class EurekaController {
     public String fallbackOrder(@RequestParam String order,
                                 @RequestParam  String customer) {
         return "Fallback Order: " + order + " for customer: " + customer + " is denied";
-    }
+    }*/
 
     /*@Autowired
     private EurekaClient2FeignClient feignClient;
@@ -52,7 +83,7 @@ public class EurekaController {
                                 @RequestParam  String customer) {
         return "Fallback Order: " + order + " for customer: " + customer + "is denied";
     }
-    
+
     @GetMapping("/test")
     public String hello() {
         return "hello";

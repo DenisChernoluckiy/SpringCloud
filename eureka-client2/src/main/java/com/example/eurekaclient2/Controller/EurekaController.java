@@ -1,6 +1,5 @@
 package com.example.eurekaclient2.Controller;
 import org.springframework.web.bind.annotation.*;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/order")
@@ -15,10 +14,5 @@ public class EurekaController {
         return "Order number: " + orderNumber + " has been taken processed; \n"  +
                 "Order contains: " + order + "; \n" +
                 "Customer: " + customer;
-    }
-
-    @GetMapping("/test")
-    public String hello() {
-        return "hello";
     }
 }
