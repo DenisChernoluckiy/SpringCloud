@@ -1,0 +1,93 @@
+version: "3"
+
+services:
+
+  eureka-server:
+    image: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - test-network
+
+
+  eureka-client:
+    image: eureka-client
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    ports:
+      - "43897:43897"
+    depends_on:
+      - eureka-server
+    networks:
+      - test-network
+
+
+  eureka-client2:
+    image: eureka-client2
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    ports:
+      - "43898:43898"
+    depends_on:
+      - eureka-server
+    networks:
+      - test-network
+
+
+  eureka-client3:
+    image: eureka-client3
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    ports:
+      - "43899:43899"
+    depends_on:
+      - eureka-server
+    networks:
+      - test-network
+
+
+  config-server:
+    image: config-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+      - spring.cloud.config.server.git.uri=https://github.com/DenisChernoluckiy/config.git
+    ports:
+      - "8888:8888"
+    depends_on:
+      - eureka-server
+    networks:
+      - test-network
+
+
+  config-client:
+    image: config-client
+    environment:
+      - spring.config.import=optional:configserver:http://localhost:8888
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+      - config-server
+    networks:
+      - test-network
+
+
+  api-gateway:
+    image: api-gateway
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    ports:
+      - "8765:8765"
+    depends_on:
+      - eureka-server
+      - config-server
+      - eureka-client
+      - eureka-client2
+      - eureka-client3
+      - config-client
+    networks:
+      - test-network
+
+
+networks:
+  test-network:

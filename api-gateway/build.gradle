@@ -33,7 +33,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	//последняя зависимость нужна что api-gateway мог перенаправлять запросы и вызывать нужные микросервисы
+	//последняя зависимость нужна чтобы api-gateway мог перенаправлять запросы и вызывать нужные микросервисы
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
 

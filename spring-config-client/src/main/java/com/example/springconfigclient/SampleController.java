@@ -44,5 +44,4 @@ public class SampleController {
         return "username: " + username + " \n" +
                 "password: " + password;
     }
-
 }

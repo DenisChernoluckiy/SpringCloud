@@ -7,7 +7,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @EnableHystrix
-public class EurekaClientApplication {
+public class  EurekaClientApplication {
 
 	private static ConfigurableApplicationContext context;
 	public static void main(String[] args) {
